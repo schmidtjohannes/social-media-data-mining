@@ -1,20 +1,26 @@
 package config
 
-import(
+import (
 	"gopkg.in/yaml.v2"
-	"log"
+	valid "github.com/asaskevich/govalidator"
 )
 
 type conf struct {
-    Hits string `yaml:"hits"`
+	Hits string `yaml:"hits"`
 }
 
-func (c *conf) getConf(yamlFile []byte) *conf {
+func getConf(yamlFile []byte) (*conf, error) {
 
-    err := yaml.Unmarshal(yamlFile, c)
-    if err != nil {
-        log.Fatalf("Unmarshal: %v", err)
-    }
+	var c conf
 
-    return c
+	err := yaml.Unmarshal(yamlFile, &c)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := valid.ValidateStruct(c); err != nil {
+		return nil, err
+	}
+
+	return &c, nil
 }
