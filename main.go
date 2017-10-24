@@ -1,13 +1,9 @@
 package main
 
 import (
-	"flag"
-	"fmt"
+	"social-media-data-mining/service"
 )
 
 func main() {
-	configFile := flag.String("config", "config.yaml", "path to config file")
-	flag.Parse()
-
-	fmt.Println(fmt.Sprintf("Config: %s", *configFile))
+	service.RunApp()
 }

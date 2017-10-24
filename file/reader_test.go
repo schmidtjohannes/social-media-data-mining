@@ -6,13 +6,13 @@ import (
 )
 
 func TestReader(t *testing.T) {
-	file, err := readFile("test-config.yaml")
+	file, err := ReadFile("test-config.yaml")
 	assert.Nil(t, err)
 	assert.NotNil(t, file)
 }
 
 func TestReaderNoFile(t *testing.T) {
-        file, err := readFile("test-broken-config.yaml")
-        assert.NotNil(t, err)
-        assert.Nil(t, file)
+	file, err := ReadFile("test-broken-config.yaml")
+	assert.NotNil(t, err)
+	assert.Nil(t, file)
 }

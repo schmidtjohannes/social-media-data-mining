@@ -25,21 +25,21 @@ networks:
 `
 
 var configStruct = Configuration{
-	Filter: Filter {
+	Filter: Filter{
 		Keywords: []string{
 			"escuela",
-                        "alumnos",
-                        "padres",
+			"alumnos",
+			"padres",
 		},
 	},
-        Networks: map[string]Network{
-                "facebook": {
-                        AccessToken: "key1",
-                        Groups: []string{
-                                "group1",
-                                "group2",
-                        },
-                },
+	Networks: map[string]Network{
+		"facebook": {
+			AccessToken: "key1",
+			Groups: []string{
+				"group1",
+				"group2",
+			},
+		},
 	},
 }
 

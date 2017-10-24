@@ -1,1 +1,4 @@
 *.out
+*.log
+social-media-data-mining
+config.yaml

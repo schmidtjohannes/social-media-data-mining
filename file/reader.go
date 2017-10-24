@@ -4,6 +4,6 @@ import (
 	"io/ioutil"
 )
 
-func readFile(path string) ([]byte, error) {
+func ReadFile(path string) ([]byte, error) {
 	return ioutil.ReadFile(path)
 }

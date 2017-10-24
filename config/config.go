@@ -9,8 +9,8 @@ type Filter struct {
 }
 
 type Network struct {
-	AccessToken string `yaml:"access-token"`
-	Groups []string	`yaml:"groups"`
+	AccessToken string   `yaml:"access-token"`
+	Groups      []string `yaml:"groups"`
 }
 
 type Configuration struct {
