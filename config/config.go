@@ -2,23 +2,30 @@ package config
 
 import (
 	"gopkg.in/yaml.v2"
-	valid "github.com/asaskevich/govalidator"
 )
 
-type conf struct {
-	Hits string `yaml:"hits"`
+type Filter struct {
+	Keywords []string `yaml:"keywords"`
 }
 
-func getConf(yamlFile []byte) (*conf, error) {
+type Network struct {
+	AccessToken string `yaml:"access-token"`
+	Groups []string	`yaml:"groups"`
+}
 
-	var c conf
+type Configuration struct {
+	Filter   Filter             `yaml:"filter"`
+	Networks map[string]Network `yaml:"networks"`
+}
+
+type Parameters map[string]interface{}
+
+func ParseConfiguration(yamlFile []byte) (*Configuration, error) {
+
+	var c Configuration
 
 	err := yaml.Unmarshal(yamlFile, &c)
 	if err != nil {
-		return nil, err
-	}
-
-	if _, err := valid.ValidateStruct(c); err != nil {
 		return nil, err
 	}
 
