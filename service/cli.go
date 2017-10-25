@@ -18,11 +18,14 @@ func RunApp() {
 
 	log.Print(fmt.Sprintf("Config file path: %s", *configFilePath))
 
-	dmManager, err := newDataMinerManager(*configFilePath)
-        if err != nil {
-                log.Fatal(fmt.Sprintf("ERROR: %s", err))
-        }	
-	err = dmManager.Execute()
+	dmManager := newDataMinerManager()
+
+	err := dmManager.init(*configFilePath)
+
+	if err != nil {
+		log.Fatal(fmt.Sprintf("ERROR: %s", err))
+	}
+	err = dmManager.execute()
 	if err != nil {
 		log.Fatal(fmt.Sprintf("ERROR: %s", err))
 	}

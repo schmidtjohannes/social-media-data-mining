@@ -44,13 +44,15 @@ var configStruct = Configuration{
 }
 
 func TestBrokenConfig(t *testing.T) {
-	c, err := ParseConfiguration([]byte(corruptData))
+	p := new(Parser)
+	c, err := p.ParseConfiguration([]byte(corruptData))
 	assert.NotNil(t, err)
 	assert.Nil(t, c)
 }
 
 func TestParseSimple(t *testing.T) {
-	config, err := ParseConfiguration([]byte(configYaml))
+	p := new(Parser)
+	config, err := p.ParseConfiguration([]byte(configYaml))
 	assert.Nil(t, err)
 	assert.Equal(t, config, &configStruct)
 }
@@ -58,7 +60,8 @@ func TestParseSimple(t *testing.T) {
 func TestMarshalRoundtrip(t *testing.T) {
 	configBytes, err := yaml.Marshal(configStruct)
 	assert.Nil(t, err)
-	config, err := ParseConfiguration(configBytes)
+	p := new(Parser)
+	config, err := p.ParseConfiguration(configBytes)
 
 	assert.Nil(t, err)
 	assert.True(t, assert.ObjectsAreEqual(config, &configStruct))

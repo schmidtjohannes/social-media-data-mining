@@ -1,2 +1,11 @@
-test1: tOne
-test2: tTwo
+filter:
+  keywords:
+    - escuela
+    - alumnos
+    - padres
+networks:
+  facebook:
+    access-token: key1
+    groups:
+      - group1
+      - group2

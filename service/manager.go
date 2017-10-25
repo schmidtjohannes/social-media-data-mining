@@ -1,36 +1,60 @@
 package service
 
 import (
-        "log"
-        "social-media-data-mining/config"
-        "social-media-data-mining/file"
+	"log"
+	"social-media-data-mining/config"
+	"social-media-data-mining/file"
 )
 
 type DataMinerManager struct {
-	Config *config.Configuration
+	fileReader file.FileReaderInterface
+	parser     config.ParserInterface
+	Config     *config.Configuration
 }
 
-func newDataMinerManager(configFilePath string) (*DataMinerManager, error) {
-        log.Print("Reading config file")
-        cfgFile, err := file.ReadFile(configFilePath)
-        if err != nil {
-                return nil, err
-        }
-        log.Print("Parsing config file")
-        cfgStruct, err := config.ParseConfiguration(cfgFile)
-        if err != nil {
-                return nil, err
-        }
-	dm := DataMinerManager{ Config : cfgStruct }
-	return &dm, nil 
+type DataMinerManagerInterface interface {
+	execute() error
+	init(string) error
+	setFileReader(file.FileReaderInterface)
+	setParser(config.ParserInterface)
 }
 
-func (m *DataMinerManager) Execute() error {
-        log.Print("Consuming social media networks")
-        //miner
-        log.Print("Analyzing data")
-        //analyzer
-        log.Print("Exporting data")
-        //exporter
+func newDataMinerManager() DataMinerManagerInterface {
+	dm := new(DataMinerManager)
+	dm.fileReader = new(file.FileReader)
+	dm.parser = new(config.Parser)
+	return dm
+}
+
+func (m *DataMinerManager) setFileReader(fr file.FileReaderInterface) {
+	m.fileReader = fr
+}
+
+func (m *DataMinerManager) setParser(p config.ParserInterface) {
+	m.parser = p
+}
+
+func (m *DataMinerManager) init(configFilePath string) error {
+	log.Print("Reading config file")
+	cfgFile, err := m.fileReader.ReadFile(configFilePath)
+	if err != nil {
+		return err
+	}
+	log.Print("Parsing config file")
+	cfgStruct, err := m.parser.ParseConfiguration(cfgFile)
+	if err != nil {
+		return err
+	}
+	m.Config = cfgStruct
+	return nil
+}
+
+func (m *DataMinerManager) execute() error {
+	log.Print("Consuming social media networks")
+	//miner
+	log.Print("Analyzing data")
+	//analyzer
+	log.Print("Exporting data")
+	//exporter
 	return nil
 }

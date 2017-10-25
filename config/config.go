@@ -20,7 +20,12 @@ type Configuration struct {
 
 type Parameters map[string]interface{}
 
-func ParseConfiguration(yamlFile []byte) (*Configuration, error) {
+type Parser struct{}
+type ParserInterface interface {
+	ParseConfiguration([]byte) (*Configuration, error)
+}
+
+func (p *Parser) ParseConfiguration(yamlFile []byte) (*Configuration, error) {
 
 	var c Configuration
 
