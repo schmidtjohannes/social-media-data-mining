@@ -49,7 +49,28 @@ var body = `{
 `
 var fbExpectedData = &FacebookGroupResponse{
 	Items: []FacebookGroupItem{
-		{Message: "Contents of the Post"},
+		{
+			Message: "Contents of the Post",
+			Id:      "123456789123456789",
+			Comments: Comments{
+				Data: []Comment{
+					{
+						Message: "Contents of the Comment",
+						From: FacebookUser{
+							Name: "John Doe",
+							Id:   "123456789",
+						},
+						Likes: Like{
+							Summary: Summary{
+								TotalCount: 14,
+								CanLike:    true,
+								HasLiked:   false,
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 }
 
@@ -75,4 +96,18 @@ func TestFacebookMiner(t *testing.T) {
 	// message hat keine comments
 	// message hat kein summary
 
+}
+func TestFacebookMinerFailGet(t *testing.T) {
+
+	fb := newFacebookMiner(fbNetwork)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		w.WriteHeader(http.StatusBadRequest)
+	}))
+	defer ts.Close()
+
+	fb.url = ts.URL
+
+	_, err := fb.QueryGroup()
+	assert.NotNil(t, err)
 }
