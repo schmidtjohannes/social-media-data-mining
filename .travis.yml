@@ -1,2 +1,6 @@
 language: go
-script: go test
+
+go:
+  - 1.8.1
+
+script: make test
