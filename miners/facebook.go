@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"social-media-data-mining/config"
 	"time"
 )
@@ -77,7 +76,7 @@ func newFacebookClient() HttpClient {
 	}
 }
 
-func newFacebookMiner(config config.Network) FacebookMiner {
+func NewFacebookMiner(config config.Network) FacebookMiner {
 	fbm := FacebookMiner{
 		accessToken: config.AccessToken,
 		groups:      config.Groups,
@@ -103,5 +102,5 @@ func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
 }
 
 func getUrl(group, accessToken string) string {
-	return url.QueryEscape(fmt.Sprintf("%s%s%s&access_token=%s", fbEndpoint, group, fbQuery, accessToken))
+	return fmt.Sprintf("%s%s%s&access_token=%s", fbEndpoint, group, fbQuery, accessToken)
 }

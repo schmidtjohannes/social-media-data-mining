@@ -77,7 +77,7 @@ var fbExpectedData = &FacebookGroupResponse{
 
 func TestFacebookMiner(t *testing.T) {
 
-	fb := newFacebookMiner(fbNetwork)
+	fb := NewFacebookMiner(fbNetwork)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -99,7 +99,7 @@ func TestFacebookMiner(t *testing.T) {
 }
 func TestFacebookMinerFailDecode(t *testing.T) {
 
-	fb := newFacebookMiner(fbNetwork)
+	fb := NewFacebookMiner(fbNetwork)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		return
@@ -120,7 +120,7 @@ func (m *MockFacebookHttpClient) Get(url string) (resp *http.Response, err error
 
 func TestFacebookMinerFailGet(t *testing.T) {
 
-	fb := newFacebookMiner(fbNetwork)
+	fb := NewFacebookMiner(fbNetwork)
 	fb.httpClient = &MockFacebookHttpClient{}
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

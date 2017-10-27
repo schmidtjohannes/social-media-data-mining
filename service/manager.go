@@ -4,6 +4,7 @@ import (
 	"log"
 	"social-media-data-mining/config"
 	"social-media-data-mining/file"
+	"social-media-data-mining/miners"
 )
 
 type DataMinerManager struct {
@@ -51,7 +52,15 @@ func (m *DataMinerManager) init(configFilePath string) error {
 
 func (m *DataMinerManager) execute() error {
 	log.Print("Consuming social media networks")
-	//miner
+
+	//todo: check if network exist
+	fb := miners.NewFacebookMiner(m.Config.Networks["facebook"])
+
+	fbData, err := fb.QueryGroup()
+	if err != nil {
+		return err
+	}
+	log.Print(fbData)
 	log.Print("Analyzing data")
 	//analyzer
 	log.Print("Exporting data")
