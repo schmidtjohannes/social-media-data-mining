@@ -3,7 +3,6 @@ package miners
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"social-media-data-mining/config"
 	"time"
@@ -54,25 +53,39 @@ type FacebookMinerInterface interface {
 type FacebookMiner struct {
 	accessToken string
 	groups      []string
-	httpClient  *http.Client
+	httpClient  HttpClient
 	url         string
 }
 
-func newFacebookMiner(config config.Network) FacebookMiner {
-	log.Print("new")
+type HttpClient interface {
+	Get(string) (resp *http.Response, err error)
+}
 
+type FacebookHttpClient struct {
+	httpclient *http.Client
+}
+
+func (c FacebookHttpClient) Get(url string) (resp *http.Response, err error) {
+	return c.httpclient.Get(url)
+}
+
+func newFacebookClient() HttpClient {
+	return &FacebookHttpClient{
+		httpclient: &http.Client{Timeout: 10 * time.Second},
+	}
+}
+
+func newFacebookMiner(config config.Network) FacebookMiner {
 	fbm := FacebookMiner{
 		accessToken: config.AccessToken,
 		groups:      config.Groups,
-		httpClient:  &http.Client{Timeout: 10 * time.Second},
+		httpClient:  newFacebookClient(),
 		url:         getUrl("group1", config.AccessToken),
 	}
 	return fbm
 }
 
 func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
-	log.Print("QueryGroup")
-	log.Print(fbm.url)
 	resp, err := fbm.httpClient.Get(fbm.url)
 	if err != nil {
 		return nil, err

@@ -1,6 +1,7 @@
 package miners
 
 import (
+	"errors"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -90,19 +91,40 @@ func TestFacebookMiner(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, assert.ObjectsAreEqual(data, fbExpectedData))
 
-	// http antwortet nicht
 	// http ist != 200
 	// http hat keine daten
 	// message hat keine comments
 	// message hat kein summary
 
 }
-func TestFacebookMinerFailGet(t *testing.T) {
+func TestFacebookMinerFailDecode(t *testing.T) {
 
 	fb := newFacebookMiner(fbNetwork)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		w.WriteHeader(http.StatusBadRequest)
+		return
+	}))
+	defer ts.Close()
+
+	fb.url = ts.URL
+
+	_, err := fb.QueryGroup()
+	assert.NotNil(t, err)
+}
+
+type MockFacebookHttpClient struct{}
+
+func (m *MockFacebookHttpClient) Get(url string) (resp *http.Response, err error) {
+	return nil, errors.New("fail")
+}
+
+func TestFacebookMinerFailGet(t *testing.T) {
+
+	fb := newFacebookMiner(fbNetwork)
+	fb.httpClient = &MockFacebookHttpClient{}
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		return
 	}))
 	defer ts.Close()
 
