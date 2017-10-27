@@ -3,7 +3,9 @@ package miners
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"net/url"
 	"social-media-data-mining/config"
 	"time"
 )
@@ -80,12 +82,13 @@ func newFacebookMiner(config config.Network) FacebookMiner {
 		accessToken: config.AccessToken,
 		groups:      config.Groups,
 		httpClient:  newFacebookClient(),
-		url:         getUrl("group1", config.AccessToken),
+		url:         getUrl(config.Groups[0], config.AccessToken),
 	}
 	return fbm
 }
 
 func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
+	log.Print(fbm.url)
 	resp, err := fbm.httpClient.Get(fbm.url)
 	if err != nil {
 		return nil, err
@@ -100,5 +103,5 @@ func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
 }
 
 func getUrl(group, accessToken string) string {
-	return fmt.Sprintf("%s%s%s&access_token=%s", fbEndpoint, group, fbQuery, accessToken)
+	return url.QueryEscape(fmt.Sprintf("%s%s%s&access_token=%s", fbEndpoint, group, fbQuery, accessToken))
 }
