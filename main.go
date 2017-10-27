@@ -1,7 +1,7 @@
 package main
 
 import (
-	"social-media-data-mining/service"
+	"github.com/schmidtjohannes/social-media-data-mining/service"
 )
 
 func main() {

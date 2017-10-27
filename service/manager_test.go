@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
-	"social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"testing"
 )
 

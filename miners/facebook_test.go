@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"testing"
 )
 

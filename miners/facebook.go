@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"time"
 )
 

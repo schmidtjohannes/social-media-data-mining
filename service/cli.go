@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"social-media-data-mining/logger"
+	"github.com/schmidtjohannes/social-media-data-mining/logger"
 )
 
 func RunApp() {
