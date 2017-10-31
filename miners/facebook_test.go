@@ -3,10 +3,10 @@ package miners
 import (
 	"errors"
 	"fmt"
+	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"testing"
 )
 
@@ -18,11 +18,24 @@ var fbNetwork = config.Network{
 	},
 }
 
+var emptyBody = `{
+   "data":[]}`
+
 var body = `{
    "data":[
       {
          "message":"Contents of the Post",
          "id":"123456789123456789",
+	"created_time": "2017-10-31T02:56:53+0000",
+      "likes": {
+        "data": [
+        ],
+        "summary": {
+          "total_count": 28,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
          "comments":{
             "data":[
                {
@@ -51,8 +64,16 @@ var body = `{
 var fbExpectedData = &FacebookGroupResponse{
 	Items: []FacebookGroupItem{
 		{
-			Message: "Contents of the Post",
-			Id:      "123456789123456789",
+			Message:     "Contents of the Post",
+			Id:          "123456789123456789",
+			CreatedTime: "2017-10-31T02:56:53+0000",
+			Likes: Like{
+				Summary: Summary{
+					TotalCount: 28,
+					CanLike:    true,
+					HasLiked:   false,
+				},
+			},
 			Comments: Comments{
 				Data: []Comment{
 					{
@@ -77,39 +98,43 @@ var fbExpectedData = &FacebookGroupResponse{
 
 func TestFacebookMiner(t *testing.T) {
 
-	fb := NewFacebookMiner(fbNetwork)
+	tests := []struct {
+		httpStatus   int
+		httpResponse string
+		success      bool
+		mockClient   bool
+	}{
+		{http.StatusOK, body, true, false},
+		{http.StatusInternalServerError, body, false, false},
+		{http.StatusOK, emptyBody, false, false},
+		{http.StatusOK, "", false, false},
+		{http.StatusOK, "", false, true},
+	}
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, body)
-	}))
-	defer ts.Close()
+	for _, v := range tests {
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			w.WriteHeader(v.httpStatus)
+			fmt.Fprintln(w, v.httpResponse)
+		}))
+		defer ts.Close()
 
-	fb.url = ts.URL
+		fb := NewFacebookMiner("group1", "key1")
+		fb.url = ts.URL
 
-	data, err := fb.QueryGroup()
-	assert.Nil(t, err)
-	assert.True(t, assert.ObjectsAreEqual(data, fbExpectedData))
+		if v.mockClient {
+			fb.httpClient = &MockFacebookHttpClient{}
+		}
 
-	// http ist != 200
-	// http hat keine daten
-	// message hat keine comments
-	// message hat kein summary
+		data, err := fb.QueryGroup()
 
-}
-func TestFacebookMinerFailDecode(t *testing.T) {
-
-	fb := NewFacebookMiner(fbNetwork)
-
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		return
-	}))
-	defer ts.Close()
-
-	fb.url = ts.URL
-
-	_, err := fb.QueryGroup()
-	assert.NotNil(t, err)
+		if v.success {
+			assert.Nil(t, err)
+			assert.True(t, assert.ObjectsAreEqual(data, fbExpectedData))
+		} else {
+			assert.NotNil(t, err)
+			assert.Nil(t, data)
+		}
+	}
 }
 
 type MockFacebookHttpClient struct{}
@@ -118,9 +143,10 @@ func (m *MockFacebookHttpClient) Get(url string) (resp *http.Response, err error
 	return nil, errors.New("fail")
 }
 
+/*
 func TestFacebookMinerFailGet(t *testing.T) {
 
-	fb := NewFacebookMiner(fbNetwork)
+	fb := NewFacebookMiner("group1", "key1")
 	fb.httpClient = &MockFacebookHttpClient{}
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -132,4 +158,4 @@ func TestFacebookMinerFailGet(t *testing.T) {
 
 	_, err := fb.QueryGroup()
 	assert.NotNil(t, err)
-}
+}*/

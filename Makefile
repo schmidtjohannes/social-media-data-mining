@@ -1,4 +1,4 @@
-.PHONY: info tools test
+.PHONY: info tools test fmt
 
 GOTOOLS = \
 	github.com/tcnksm/ghr \
@@ -22,4 +22,5 @@ tools:
 test:
 	go test -v $(PACKAGES) -cover
 
-
+fmt:
+	gofmt -w -s .

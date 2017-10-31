@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
+	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
-	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"testing"
 )
 

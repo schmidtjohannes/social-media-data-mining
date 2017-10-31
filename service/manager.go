@@ -1,10 +1,10 @@
 package service
 
 import (
-	"log"
 	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"github.com/schmidtjohannes/social-media-data-mining/file"
 	"github.com/schmidtjohannes/social-media-data-mining/miners"
+	"log"
 )
 
 type DataMinerManager struct {

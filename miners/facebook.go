@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"time"
 )
 
 //API v2.10
 var fbEndpoint = "https://graph.facebook.com/v2.10/"
-var fbQuery = "/feed?fields=message,comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
+var fbQuery = "/feed?fields=message,created_time,likes.limit(0).summary(true),comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
 
 type FacebookGroupResponse struct {
 	Items []FacebookGroupItem `json:"data"`
 }
 type FacebookGroupItem struct {
-	Message  string   `json:"message"`
-	Id       string   `json:"id"`
-	Comments Comments `json:"comments"`
+	Message     string   `json:"message"`
+	CreatedTime string   `json:"created_time"`
+	Id          string   `json:"id"`
+	Comments    Comments `json:"comments"`
+	Likes       Like     `json:"likes"`
 }
 
 type Comments struct {
@@ -53,7 +54,7 @@ type FacebookMinerInterface interface {
 
 type FacebookMiner struct {
 	accessToken string
-	groups      []string
+	group       string
 	httpClient  HttpClient
 	url         string
 }
@@ -76,12 +77,12 @@ func newFacebookClient() HttpClient {
 	}
 }
 
-func NewFacebookMiner(config config.Network) FacebookMiner {
+func NewFacebookMiner(fbGroup, fbAccessToken string) FacebookMiner {
 	fbm := FacebookMiner{
-		accessToken: config.AccessToken,
-		groups:      config.Groups,
+		accessToken: fbAccessToken,
+		group:       fbGroup,
 		httpClient:  newFacebookClient(),
-		url:         getUrl(config.Groups[0], config.AccessToken),
+		url:         getUrl(fbGroup, fbAccessToken),
 	}
 	return fbm
 }
@@ -97,6 +98,12 @@ func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
 	err = json.NewDecoder(resp.Body).Decode(fgr)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		return nil, &HttpStatusNokError{Code: resp.StatusCode, Message: resp.Status}
+	}
+	if fgr.Items == nil || len(fgr.Items) == 0 {
+		return nil, &EmptyResultError{Name: fbm.group}
 	}
 	return fgr, nil
 }

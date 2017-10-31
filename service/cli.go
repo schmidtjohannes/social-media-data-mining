@@ -3,8 +3,8 @@ package service
 import (
 	"flag"
 	"fmt"
-	"log"
 	"github.com/schmidtjohannes/social-media-data-mining/logger"
+	"log"
 )
 
 func RunApp() {
