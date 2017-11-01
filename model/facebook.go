@@ -1,5 +1,19 @@
 package model
 
+type FacebookStatistics struct {
+	GroupData map[string]FacebookGroupStatistics
+}
+
+type FacebookGroupStatistics struct {
+	Details []FacebookStatisticDetail
+}
+
+type FacebookStatisticDetail struct {
+	Post     string
+	Likes    int64
+	Comments int
+}
+
 type FacebookGroupResponse struct {
 	Items []FacebookGroupItem `json:"data"`
 }

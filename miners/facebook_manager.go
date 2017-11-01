@@ -7,7 +7,7 @@ import (
 )
 
 type FacebookManagerInterface interface {
-	QueryGroups() ([]*model.FacebookGroupResponse, error)
+	QueryGroups() (map[string]*model.FacebookGroupResponse, error)
 }
 
 type FacebookManager struct {
@@ -28,15 +28,16 @@ func NewFacebookManager(cfg *config.Configuration) (*FacebookManager, error) {
 	return &FacebookManager{Config: cfg}, nil
 }
 
-func (fm *FacebookManager) QueryGroups() ([]*model.FacebookGroupResponse, error) {
-	var fgr []*model.FacebookGroupResponse
+func (fm *FacebookManager) QueryGroups() (map[string]*model.FacebookGroupResponse, error) {
+	fgr := make(map[string]*model.FacebookGroupResponse)
 	for idx := range fm.Config.Networks["facebook"].Groups {
-		fm := newFacebookMiner(fm.Config.Networks["facebook"].Groups[idx], fm.Config.Networks["facebook"].AccessToken)
+		fbGroupId := fm.Config.Networks["facebook"].Groups[idx]
+		fm := newFacebookMiner(fbGroupId, fm.Config.Networks["facebook"].AccessToken)
 		r, err := fm.QueryGroup()
 		if err != nil {
 			return nil, err
 		}
-		fgr = append(fgr, r)
+		fgr[fbGroupId] = r
 	}
 	return fgr, nil
 }

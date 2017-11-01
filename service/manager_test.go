@@ -10,11 +10,11 @@ import (
 )
 
 type FacebookManagerMock struct {
-	data  []*model.FacebookGroupResponse
+	data  map[string]*model.FacebookGroupResponse
 	error error
 }
 
-func (fmm *FacebookManagerMock) QueryGroups() ([]*model.FacebookGroupResponse, error) {
+func (fmm *FacebookManagerMock) QueryGroups() (map[string]*model.FacebookGroupResponse, error) {
 	return fmm.data, fmm.error
 }
 
@@ -101,7 +101,8 @@ func TestExecuteManager(t *testing.T) {
 			{Message: "Contents of the Post"},
 		},
 	}
-	a := []*model.FacebookGroupResponse{mockResponse}
+	a := make(map[string]*model.FacebookGroupResponse)
+	a["test-group-id"] = mockResponse
 
 	dm.facebookMiner = &FacebookManagerMock{data: a, error: nil}
 	res := dm.execute()
