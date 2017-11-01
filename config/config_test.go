@@ -23,6 +23,13 @@ networks:
       - group1
       - group2
 `
+var configNoNetwork = `
+filter:
+  keywords:
+    - escuela
+    - alumnos
+    - padres
+`
 
 var configStruct = Configuration{
 	Filter: Filter{
@@ -65,4 +72,11 @@ func TestMarshalRoundtrip(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, assert.ObjectsAreEqual(config, &configStruct))
+}
+
+func TestConfigAtLeastOneNetwork(t *testing.T){
+        p := new(Parser)
+        config, err := p.ParseConfiguration([]byte(configNoNetwork))
+	assert.NotNil(t, err)
+	assert.Nil(t, config)
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"gopkg.in/yaml.v2"
+	"errors"
 )
 
 type Filter struct {
@@ -33,6 +34,8 @@ func (p *Parser) ParseConfiguration(yamlFile []byte) (*Configuration, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	if c.Networks == nil || len(c.Networks) == 0 {
+		return nil, errors.New("no network found")
+	}
 	return &c, nil
 }
