@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 )
 
 //API v2.10
@@ -12,44 +13,8 @@ var fbEndpoint = "https://graph.facebook.com/v2.10/"
 var fbQuery = "/feed?fields=message,created_time,likes.limit(0).summary(true),comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
 var fbMembersEndpoint = "members"
 
-type FacebookGroupResponse struct {
-	Items []FacebookGroupItem `json:"data"`
-}
-type FacebookGroupItem struct {
-	Message     string   `json:"message"`
-	CreatedTime string   `json:"created_time"`
-	Id          string   `json:"id"`
-	Comments    Comments `json:"comments"`
-	Likes       Like     `json:"likes"`
-}
-
-type Comments struct {
-	Data []Comment `json:"data"`
-}
-
-type Comment struct {
-	Message string       `json:"message"`
-	From    FacebookUser `json:"from"`
-	Likes   Like         `json:"likes"`
-}
-
-type Like struct {
-	Summary Summary `json:"summary"`
-}
-
-type Summary struct {
-	TotalCount int64 `json:"total_count"`
-	CanLike    bool  `json:"can_like"`
-	HasLiked   bool  `json:"has_liked"`
-}
-
-type FacebookUser struct {
-	Name string `json:"name"`
-	Id   string `json:"id"`
-}
-
 type FacebookMinerInterface interface {
-	QueryGroup() FacebookGroupResponse
+	QueryGroup() model.FacebookGroupResponse
 }
 
 type FacebookMiner struct {
@@ -87,13 +52,13 @@ func newFacebookMiner(fbGroup, fbAccessToken string) FacebookMiner {
 	return fbm
 }
 
-func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
+func (fbm *FacebookMiner) QueryGroup() (*model.FacebookGroupResponse, error) {
 	resp, err := fbm.httpClient.Get(fbm.url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	fgr := &FacebookGroupResponse{}
+	fgr := &model.FacebookGroupResponse{}
 	err = json.NewDecoder(resp.Body).Decode(fgr)
 	if err != nil {
 		return nil, err

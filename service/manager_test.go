@@ -3,10 +3,20 @@ package service
 import (
 	"errors"
 	"github.com/schmidtjohannes/social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"testing"
 )
+
+type FacebookManagerMock struct {
+	data []*model.FacebookGroupResponse
+	error error
+}
+
+func (fmm *FacebookManagerMock) QueryGroups() ([]*model.FacebookGroupResponse, error) {
+	return fmm.data, fmm.error
+}
 
 type FileReaderMock struct {
 	mockReadFile func(string) ([]byte, error)
@@ -83,6 +93,21 @@ func TestInit(t *testing.T) {
 
 func TestExecuteManager(t *testing.T) {
 	dm := new(DataMinerManager)
+        dm.setFileReader(new(FileReaderMock))
+        dm.setParser(new(ParserMock))
+	dm.init("")
+	mockResponse := &model.FacebookGroupResponse{
+		Items: []model.FacebookGroupItem{
+			{ Message:     "Contents of the Post", },
+		},
+	}
+	a := []*model.FacebookGroupResponse {mockResponse}
+
+	dm.facebookMiner = &FacebookManagerMock{ data : a, error : nil }
 	res := dm.execute()
 	assert.Nil(t, res)
+	
+	dm.facebookMiner = &FacebookManagerMock{ data : nil, error : errors.New("fail") }
+        res = dm.execute()
+        assert.NotNil(t, res)
 }

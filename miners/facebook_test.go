@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 )
 
 var emptyBody = `{
@@ -52,29 +53,29 @@ var body = `{
    ]
 }
 `
-var fbExpectedData = &FacebookGroupResponse{
-	Items: []FacebookGroupItem{
+var fbExpectedData = &model.FacebookGroupResponse{
+	Items: []model.FacebookGroupItem{
 		{
 			Message:     "Contents of the Post",
 			Id:          "123456789123456789",
 			CreatedTime: "2017-10-31T02:56:53+0000",
-			Likes: Like{
-				Summary: Summary{
+			Likes: model.Like{
+				Summary: model.Summary{
 					TotalCount: 28,
 					CanLike:    true,
 					HasLiked:   false,
 				},
 			},
-			Comments: Comments{
-				Data: []Comment{
+			Comments: model.Comments{
+				Data: []model.Comment{
 					{
 						Message: "Contents of the Comment",
-						From: FacebookUser{
+						From: model.FacebookUser{
 							Name: "John Doe",
 							Id:   "123456789",
 						},
-						Likes: Like{
-							Summary: Summary{
+						Likes: model.Like{
+							Summary: model.Summary{
 								TotalCount: 14,
 								CanLike:    true,
 								HasLiked:   false,

@@ -11,6 +11,7 @@ type DataMinerManager struct {
 	fileReader file.FileReaderInterface
 	parser     config.ParserInterface
 	Config     *config.Configuration
+	facebookMiner miners.FacebookManagerInterface
 }
 
 type DataMinerManagerInterface interface {
@@ -47,16 +48,18 @@ func (m *DataMinerManager) init(configFilePath string) error {
 		return err
 	}
 	m.Config = cfgStruct
+        fb, err := miners.NewFacebookManager(m.Config)
+        if err != nil {
+                return err
+        }
+	m.facebookMiner = fb
 	return nil
 }
 
 func (m *DataMinerManager) execute() error {
 	log.Print("Consuming social media networks")
 
-	//todo: check if network exist
-	fb := miners.NewFacebookMiner(m.Config.Networks["facebook"])
-
-	fbData, err := fb.QueryGroup()
+	fbData, err := m.facebookMiner.QueryGroups()
 	if err != nil {
 		return err
 	}

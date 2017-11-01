@@ -3,7 +3,12 @@ package miners
 import (
 	"errors"
 	"github.com/schmidtjohannes/social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 )
+
+type FacebookManagerInterface interface {
+	QueryGroups() ([]*model.FacebookGroupResponse, error)
+}
 
 type FacebookManager struct {
 	Config *config.Configuration
@@ -23,8 +28,8 @@ func NewFacebookManager(cfg *config.Configuration) (*FacebookManager, error) {
 	return &FacebookManager{Config: cfg}, nil
 }
 
-func (fm *FacebookManager) QueryGroups() ([]*FacebookGroupResponse, error) {
-	var fgr []*FacebookGroupResponse
+func (fm *FacebookManager) QueryGroups() ([]*model.FacebookGroupResponse, error) {
+	var fgr []*model.FacebookGroupResponse
 	for idx := range fm.Config.Networks["facebook"].Groups {
 		fm := newFacebookMiner(fm.Config.Networks["facebook"].Groups[idx], fm.Config.Networks["facebook"].AccessToken)
 		r, err := fm.QueryGroup()
