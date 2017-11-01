@@ -3,7 +3,6 @@ package miners
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 )
@@ -11,6 +10,7 @@ import (
 //API v2.10
 var fbEndpoint = "https://graph.facebook.com/v2.10/"
 var fbQuery = "/feed?fields=message,created_time,likes.limit(0).summary(true),comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
+var fbMembersEndpoint = "members"
 
 type FacebookGroupResponse struct {
 	Items []FacebookGroupItem `json:"data"`
@@ -77,7 +77,7 @@ func newFacebookClient() HttpClient {
 	}
 }
 
-func NewFacebookMiner(fbGroup, fbAccessToken string) FacebookMiner {
+func newFacebookMiner(fbGroup, fbAccessToken string) FacebookMiner {
 	fbm := FacebookMiner{
 		accessToken: fbAccessToken,
 		group:       fbGroup,
@@ -88,7 +88,6 @@ func NewFacebookMiner(fbGroup, fbAccessToken string) FacebookMiner {
 }
 
 func (fbm *FacebookMiner) QueryGroup() (*FacebookGroupResponse, error) {
-	log.Print(fbm.url)
 	resp, err := fbm.httpClient.Get(fbm.url)
 	if err != nil {
 		return nil, err

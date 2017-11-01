@@ -3,20 +3,11 @@ package miners
 import (
 	"errors"
 	"fmt"
-	"github.com/schmidtjohannes/social-media-data-mining/config"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
-
-var fbNetwork = config.Network{
-	AccessToken: "key1",
-	Groups: []string{
-		"group1",
-		"group2",
-	},
-}
 
 var emptyBody = `{
    "data":[]}`
@@ -118,7 +109,7 @@ func TestFacebookMiner(t *testing.T) {
 		}))
 		defer ts.Close()
 
-		fb := NewFacebookMiner("group1", "key1")
+		fb := newFacebookMiner("group1", "key1")
 		fb.url = ts.URL
 
 		if v.mockClient {
