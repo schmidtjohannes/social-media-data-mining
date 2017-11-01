@@ -1,7 +1,6 @@
 package analyzer
 
 import (
-	"fmt"
 	"github.com/schmidtjohannes/social-media-data-mining/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
