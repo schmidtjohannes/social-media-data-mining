@@ -1,8 +1,7 @@
 package miners
 
-
-type MinerInterface interface{
-        QueryGroups (MinerData, error)
+type MinerInterface interface {
+	QueryGroups(MinerData, error)
 }
 
 type MinerData struct {

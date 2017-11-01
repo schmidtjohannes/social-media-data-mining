@@ -3,11 +3,11 @@ package miners
 import (
 	"errors"
 	"fmt"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/schmidtjohannes/social-media-data-mining/model"
 )
 
 var emptyBody = `{

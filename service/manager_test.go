@@ -10,7 +10,7 @@ import (
 )
 
 type FacebookManagerMock struct {
-	data []*model.FacebookGroupResponse
+	data  []*model.FacebookGroupResponse
 	error error
 }
 
@@ -93,21 +93,21 @@ func TestInit(t *testing.T) {
 
 func TestExecuteManager(t *testing.T) {
 	dm := new(DataMinerManager)
-        dm.setFileReader(new(FileReaderMock))
-        dm.setParser(new(ParserMock))
+	dm.setFileReader(new(FileReaderMock))
+	dm.setParser(new(ParserMock))
 	dm.init("")
 	mockResponse := &model.FacebookGroupResponse{
 		Items: []model.FacebookGroupItem{
-			{ Message:     "Contents of the Post", },
+			{Message: "Contents of the Post"},
 		},
 	}
-	a := []*model.FacebookGroupResponse {mockResponse}
+	a := []*model.FacebookGroupResponse{mockResponse}
 
-	dm.facebookMiner = &FacebookManagerMock{ data : a, error : nil }
+	dm.facebookMiner = &FacebookManagerMock{data: a, error: nil}
 	res := dm.execute()
 	assert.Nil(t, res)
-	
-	dm.facebookMiner = &FacebookManagerMock{ data : nil, error : errors.New("fail") }
-        res = dm.execute()
-        assert.NotNil(t, res)
+
+	dm.facebookMiner = &FacebookManagerMock{data: nil, error: errors.New("fail")}
+	res = dm.execute()
+	assert.NotNil(t, res)
 }

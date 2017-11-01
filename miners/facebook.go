@@ -3,9 +3,9 @@ package miners
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/schmidtjohannes/social-media-data-mining/model"
 	"net/http"
 	"time"
-	"github.com/schmidtjohannes/social-media-data-mining/model"
 )
 
 //API v2.10

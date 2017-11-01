@@ -74,9 +74,9 @@ func TestMarshalRoundtrip(t *testing.T) {
 	assert.True(t, assert.ObjectsAreEqual(config, &configStruct))
 }
 
-func TestConfigAtLeastOneNetwork(t *testing.T){
-        p := new(Parser)
-        config, err := p.ParseConfiguration([]byte(configNoNetwork))
+func TestConfigAtLeastOneNetwork(t *testing.T) {
+	p := new(Parser)
+	config, err := p.ParseConfiguration([]byte(configNoNetwork))
 	assert.NotNil(t, err)
 	assert.Nil(t, config)
 }

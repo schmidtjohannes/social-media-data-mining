@@ -8,9 +8,9 @@ import (
 )
 
 type DataMinerManager struct {
-	fileReader file.FileReaderInterface
-	parser     config.ParserInterface
-	Config     *config.Configuration
+	fileReader    file.FileReaderInterface
+	parser        config.ParserInterface
+	Config        *config.Configuration
 	facebookMiner miners.FacebookManagerInterface
 }
 
@@ -48,10 +48,10 @@ func (m *DataMinerManager) init(configFilePath string) error {
 		return err
 	}
 	m.Config = cfgStruct
-        fb, err := miners.NewFacebookManager(m.Config)
-        if err != nil {
-                return err
-        }
+	fb, err := miners.NewFacebookManager(m.Config)
+	if err != nil {
+		return err
+	}
 	m.facebookMiner = fb
 	return nil
 }

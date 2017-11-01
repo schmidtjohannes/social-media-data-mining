@@ -1,8 +1,8 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
 	"errors"
+	"gopkg.in/yaml.v2"
 )
 
 type Filter struct {
