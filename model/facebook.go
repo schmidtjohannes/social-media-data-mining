@@ -19,6 +19,7 @@ type FacebookGroupResponse struct {
 }
 type FacebookGroupItem struct {
 	Message     string   `json:"message"`
+	Story       string   `json:"story"`
 	CreatedTime string   `json:"created_time"`
 	Id          string   `json:"id"`
 	Comments    Comments `json:"comments"`

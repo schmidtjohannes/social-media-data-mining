@@ -24,11 +24,18 @@ func extractPosts(posts []model.FacebookGroupItem) []model.FacebookStatisticDeta
 
 func extractDetails(post model.FacebookGroupItem) model.FacebookStatisticDetail {
 	fbStatsDetail := model.FacebookStatisticDetail{
-		Post:     short(post.Message, 16),
+		Post:     short(getPostContent(post), 24),
 		Likes:    post.Likes.Summary.TotalCount,
 		Comments: len(post.Comments.Data),
 	}
 	return fbStatsDetail
+}
+
+func getPostContent(post model.FacebookGroupItem) string {
+	if post.Message == "" {
+		return post.Story
+	}
+	return post.Message
 }
 
 func short(s string, i int) string {

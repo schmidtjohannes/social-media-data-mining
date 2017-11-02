@@ -10,7 +10,7 @@ import (
 
 //API v2.10
 var fbEndpoint = "https://graph.facebook.com/v2.10/"
-var fbQuery = "/feed?fields=message,created_time,likes.limit(0).summary(true),comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
+var fbQuery = "/feed?fields=message,story,created_time,likes.limit(0).summary(true),comments.limit(10).summary(true){message,from,likes.limit(0).summary(true)}"
 var fbMembersEndpoint = "members"
 
 type FacebookMinerInterface interface {

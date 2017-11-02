@@ -16,8 +16,8 @@ func TestFacebookAnalyzer(t *testing.T) {
 			},
 			"group2": {
 				Details: []model.FacebookStatisticDetail{
-					{Post: "Post 1 group2 mo", Likes: 7, Comments: 1},
-					{Post: "Post 2 group2 mo", Likes: 8, Comments: 2},
+					{Post: "Post 1 group2 more text ", Likes: 7, Comments: 1},
+					{Post: "Post 2 group2 more text ", Likes: 8, Comments: 2},
 				},
 			},
 		},
