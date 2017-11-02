@@ -1,7 +1,9 @@
 package service
 
 import (
+	"github.com/schmidtjohannes/social-media-data-mining/analyzer"
 	"github.com/schmidtjohannes/social-media-data-mining/config"
+	"github.com/schmidtjohannes/social-media-data-mining/exporter"
 	"github.com/schmidtjohannes/social-media-data-mining/file"
 	"github.com/schmidtjohannes/social-media-data-mining/miners"
 	"log"
@@ -63,10 +65,9 @@ func (m *DataMinerManager) execute() error {
 	if err != nil {
 		return err
 	}
-	log.Print(fbData)
 	log.Print("Analyzing data")
-	//analyzer
+	fbStats := analyzer.AnalyzeFacebookData(fbData)
 	log.Print("Exporting data")
-	//exporter
+	exporter.ExportFacebookData(fbStats)
 	return nil
 }

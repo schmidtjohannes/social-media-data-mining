@@ -2,3 +2,4 @@
 *.log
 social-media-data-mining
 config.yaml
+*.csv
