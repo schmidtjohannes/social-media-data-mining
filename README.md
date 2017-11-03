@@ -15,10 +15,11 @@ https://findmyfbid.in/
 
 
 create config.yaml<br>
-`networks:
+```
+networks:
   facebook:
     access-token: <tu token>
     groups:
       - <group-id-1>
       - <group-id-2>
-`
+```
